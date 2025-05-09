@@ -1,0 +1,77 @@
+target_language: "english"
+default_provider: "gemini"
+providers:
+  gemini:
+    enabled: true
+    api_keys:
+      - "AI"
+      # - "YOUR_GEMINI_API_KEY_2"
+    model: "gemini-2.5-flash-preview-04-17"
+    # Optional: specific settings for Gemini
+    # generation_config:
+    #   temperature: 0.7
+    # safety_settings:
+    #   HARASSMENT: BLOCK_NONE
+
+  openai:
+    enabled: false
+    api_keys:
+      - "sk-"
+    model: "gpt-4o"
+    # base_url: "https://api.openai.com/v1" # Default, can be overridden for proxies
+
+  openrouter:
+    enabled: false
+    api_key: "sk-or-v1-"
+    # Models are specified by their full OpenRouter path, e.g., "anthropic/claude-3-opus"
+    default_model: "deepseek/deepseek-chat-v3-0324"
+
+  deepseek:
+    enabled: false
+    api_keys:
+      - ""
+    model: "deepseek-chat" # or deepseek-reasoner
+
+# Prompt template for translation
+# Placeholders: {text_to_translate}, {target_language}, {source_language}
+prompt_template: |
+  You are a professional translator specializing in localizing game content for Paradox Interactive games.
+  The user will provide ONLY the string value that needs translation. This string originally comes from a YML file, typically in a 'key: "value"' format.
+  Your task is to translate ONLY this provided string value into {target_language}.
+  DO NOT include the YML key or the surrounding quotes in your output. Your output must be ONLY the translated string.
+  Maintain the original meaning, tone, and context suitable for the game.
+
+  Example:
+  If the original YML line was: `some_key.name:0 "Original text to translate"`
+  The user (this script) will provide you with the string: `Original text to translate`
+  If {target_language} is German, your Expected Output should be ONLY the translated string: `Übersetzter Text`
+
+  If the input is a plain string, translate that string directly.
+
+  Translate ONLY the following string value into {target_language}:
+  ---
+  {text_to_translate}
+  ---
+
+paradox_localization:
+  # Regex to identify and capture the key part and the translatable string.
+  # Group 1: The full key (e.g., "ger.01.t:0")
+  # Group 2: The string to be translated (e.g., "Economic Problems")
+  line_regex: '^\s*([a-zA-Z0-9_.\-]+:\d+)\s*"(.*)"\s*(#.*)?$'
+  # The (#.*)? part at the end is to optionally match and ignore comments.
+
+  # Encoding of the Paradox localisation files (UTF-8 with BOM)
+  file_encoding: "utf-8-sig"
+
+# General translation process settings
+translation_settings:
+  max_chars_per_api_call: 4000
+  max_translation_attempts_per_string: 3
+
+# Database settings
+database:
+  path: "translations_v2.db"
+
+ui:
+  refresh_rate_hz: 1 # How many times per second the UI updates
+  max_log_lines_display: 20
