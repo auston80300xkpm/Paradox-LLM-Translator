@@ -57,7 +57,7 @@ paradox_localization:
   # Regex to identify and capture the key part and the translatable string.
   # Group 1: The full key (e.g., "ger.01.t:0")
   # Group 2: The string to be translated (e.g., "Economic Problems")
-  line_regex: '^\s*([a-zA-Z0-9_.\-]+:\d+)\s*"(.*)"\s*(#.*)?$'
+  line_regex: '^\s*([a-zA-Z0-9_.\\-]+(?:[:\d]+)?)\s*"(.*)"\s*(#.*)?$'
   # The (#.*)? part at the end is to optionally match and ignore comments.
 
   # Encoding of the Paradox localisation files (UTF-8 with BOM)
